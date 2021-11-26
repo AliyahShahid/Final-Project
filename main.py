@@ -1,8 +1,25 @@
 # Imports
 
 import cv2
-import numpy as np
+# import numpy as np
 import matplotlib.pyplot as plt
+
+# The 1 value is there because I want it to load and read a colour image
+CFB_img = cv2.imread('CaramelColourStages/CFB.jpg', 1)
+CCL_img = cv2.imread('CaramelColourStages/CCL.jpg', 1)
+CBL_img = cv2.imread('CaramelColourStages/CBL.jpg', 1)
+CLA_img = cv2.imread('CaramelColourStages/CLA.jpg', 1)
+CMA_img = cv2.imread('CaramelColourStages/CMA.jpg', 1)
+CDA_img = cv2.imread('CaramelColourStages/CDA.jpg', 1)
+CBS_img = cv2.imread('CaramelColourStages/CBS.jpg', 1)
+
+CFB_hsv_img = cv2.cvtColor(CFB_img, cv2.COLOR_BGR2HSV)
+CCL_hsv_img = cv2.cvtColor(CCL_img, cv2.COLOR_BGR2HSV)
+CBL_hsv_img = cv2.cvtColor(CBL_img, cv2.COLOR_BGR2HSV)
+CLA_hsv_img = cv2.cvtColor(CLA_img, cv2.COLOR_BGR2HSV)
+CMA_hsv_img = cv2.cvtColor(CMA_img, cv2.COLOR_BGR2HSV)
+CDA_hsv_img = cv2.cvtColor(CDA_img, cv2.COLOR_BGR2HSV)
+CBS_hsv_img = cv2.cvtColor(CBS_img, cv2.COLOR_BGR2HSV)
 
 # Loading the sugar image to use to find matching features and detect the sugar in the video
 # Converting the image here and video later into grayscale so that less information needs to be provided for each pixel
@@ -73,6 +90,13 @@ matches = sorted(matches, key = lambda x:x.distance)
 
 matched_img = cv2.drawMatches(sugar_img, kp1, gray_video, kp2, matches[:20], None, flags = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
 
+# # Convert the colour space from Grayscale to HSV
+
+bgr_video = cv2.cvtColor(gray_video, cv2.COLOR_GRAY2BGR)
+hsv_video = cv2.cvtColor(bgr_video, cv2.COLOR_BGR2HSV)
+
+print(hsv_video)
+
 plt.imshow(matched_img), plt.show()
 
 cv2.waitKey(0)
@@ -81,90 +105,18 @@ cv2.waitKey(0)
 
 cv2.destroyAllWindows()
 
-# # Convert the colour space from BGR to HSV
-#
-# hsv = cv2.cv2tColor(frame, cv2.COLOR_BGR2HSV)
-#
-# # Pick a lower and upper bound for pixels we want to extract
-#
-# # Check the hsv colour wheel to put inside the square brackets
-#
-# lower_caramel = np.array([CFB_hsv_img])
-# upper_caramel = np.array([CBS_hsv_img])
-#
-# # Mask = portion of an image - tells you which parts of the image you should keep
-# # The mask blocks out all the other colours other than the ones in the range of what youre wanting
-#
-# mask = cv2.inRange(hsv, lower_blue, upper_blue)
-#
-# # This line is what picks out what colours match and what doesn't and turns it to black
-#
-# result = cv2.bitwise_and(frame, frame, mask=mask)
-#
-# cv2.imshow('frame', result)
-
 # Unfinished stuff
 
 # color = range of colours in acceptable form
-#
+
 # if cameracolour is between lowercolour and lowestofcolour then
 #     yellow light
-#
+
 #     else if cameracolour = colour
 #     greenlight
-#
+
 #     else if cameracolour is between highest colour and burnt colour max then
 #     redlight
-#
+
 #     else
 #     "Please point the camera at the caramel"
-
-# Imports for the led control
-
-# RPi.GPIO allows us to control all GPIOs from the raspberry pi GPIO header
-
-# import RPi.GPIO as GPIO
-
-# Time module allows us to turn the leds on for certain amounts of times
-
-# import time
-
-# LED_PIN = 17
-
-# This creates a constant global variable with the GPIO number for the LED
-
-# GPIO.setmode(GPIO.BCM)
-
-# https://roboticsbackend.com/raspberry-pi-control-led-python-3/
-
-# # The 1 value is there because I want it to load and read a colour image
-# CFB_img = cv2.imread('CaramelColourStages/CFB.jpg', 1)
-# CBS_img = cv2.imread('CaramelColourStages/CBS.jpg', 1)
-#
-# CFB_hsv_img = cv2.cv2tColor(CFB_img, cv2.COLOR_BGR2HSV)
-# CBS_hsv_img = cv2.cv2tColor(CBS_img, cv2.COLOR_BGR2HSV)
-#
-# print(CFB_hsv_img)
-# print(CBS_hsv_img)
-
-# Initialising the ORB detector algorithm
-
-    # orb = cv2.ORB_create()
-    #
-    # sugar_img_keyPoints, sugar_img_descriptors = orb.detectAndCompute(sugar_img_gray, None)
-    # sugar_vid_keyPoints, sugar_vid_descriptors = orb.detectAndCompute(sugar_vid_gray, None)
-    #
-    # matcher = cv2.BFMatcher()
-    # matches = matcher.match(sugar_vid_descriptors, sugar_img_descriptors)
-    #
-    # final_sugar_img = cv2.drawMatches(sugar_vid, sugar_vid_keyPoints, sugar_img, sugar_img_keyPoints, matches[:20], None)
-    #
-    # final_sugar_img = cv2.resize(final_sugar_img, (1000, 650))
-    #
-    # cv2.imshow("Matches", final_sugar_img)
-    # cv2.waitKey(3000)
-
-    # Find image in video
-    # Put a box around the image
-    # Label the image of the current stage
-    # Track the image
