@@ -4,50 +4,14 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Loading the sugar image to detect it initially so that I can then track the stage of the cooking process
+# Loading the sugar image to use to find matching features and detect the sugar in the video
+# Converting the image here and video later into grayscale so that less information needs to be provided for each pixel
 
-# sugar_img = cv2.imread('CaramelColourStages/Sugar.jpg', cv2.IMREAD_GRAYSCALE)
-# uneditedSugar_img = cv2.imread('CaramelColourStages/UneditedSugar.jpg', cv2.IMREAD_GRAYSCALE)
-#
-# # Display the image (so that I can see when testing the idea)
-#
-# cv2.imshow("Sugar", sugar_img)
-# cv2.imshow("Unedited Sugar", uneditedSugar_img)
-#
-# # Initiating ORB detector
-#
-# orb = cv2.ORB_create()
-#
-# # Finding the keypoints and descriptors with ORB
-#
-# kp1, des1 = orb.detectAndCompute(sugar_img, None)
-# kp2, des2 = orb.detectAndCompute(uneditedSugar_img, None)
-#
-# # Creating the BFMatcher object
-#
-# bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-#
-# # Matching the descriptors
-#
-# matches = bf.match(des1, des2)
-#
-# # Sorting them in the order of their distance
-#
-# matches = sorted(matches, key = lambda x:x.distance)
-#
-# # Drawing the first 10 matches
-#
-# img3 = cv2.drawMatches(sugar_img, kp1, uneditedSugar_img, kp2, matches[:10], None, flags = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-#
-# plt.imshow(img3), plt.show()
-
-# cv2.waitKey(0)
-
-# NOT HERE Converting the image to a grayscale so that less information needs to be provided for each pixel. I think it's already in greyscale but just to be sure
+sugar_img = cv2.imread('CaramelColourStages/Sugar.jpg', cv2.IMREAD_GRAYSCALE)
 
 # Create a VideoCapture object and read from input file
 
-capture = cv2.VideoCapture('Sugar_vid.MP4')
+capture = cv2.VideoCapture('CaramelColourStages/Sugar_vid.MP4')
 
 # Checking if camera is opened successfully
 
@@ -62,19 +26,16 @@ while (capture.isOpened()):
 
     ret, frame = capture.read()
 
-    # Sugar image for detecting the beginning stage
-
-    # sugar_vid = 'CaramelColourStages/Sugar.jpg'
-    #
-    # sugar_vid_gray = cv2.cv2tColor(sugar_vid, cv2.COLOR_BGR2GRAY)
-
     if ret == True:
+
+        gray_video = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Display the resulting frame
 
-        cv2.imshow('Frame', frame)
+        cv2.imshow('Frame', gray_video)
 
     # Press Q on keyboard to quit
+    # Putting waitKey as more than 0 because I don't want to pause the stream forever
 
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
@@ -86,6 +47,35 @@ while (capture.isOpened()):
 # Release the video capture object when everything is done
 
 capture.release()
+
+# # Initiating ORB detector
+#
+orb = cv2.ORB_create()
+#
+# # Finding the keypoints and descriptors with ORB
+#
+kp1, des1 = orb.detectAndCompute(sugar_img, None)
+kp2, des2 = orb.detectAndCompute(gray_video, None)
+
+# # Creating the BFMatcher object
+#
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+#
+# # Matching the descriptors
+#
+matches = bf.match(des1, des2)
+#
+# # Sorting them in the order of their distance
+#
+matches = sorted(matches, key = lambda x:x.distance)
+
+# Drawing the first 20 matches
+
+matched_img = cv2.drawMatches(sugar_img, kp1, gray_video, kp2, matches[:20], None, flags = cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+
+plt.imshow(matched_img), plt.show()
+
+cv2.waitKey(0)
 
 # Closes all the frames
 
