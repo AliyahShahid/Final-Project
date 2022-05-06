@@ -9,7 +9,7 @@ import argparse
 def testDetection():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--image", default = 'Test images\p1.jpeg', help = "Test image")
+    parser.add_argument("--image", default = 'Test images\c3.jpg', help = "Test image")
 
     # I added r before the file path because errors came without it and the original file path that wasnt the full one also gave errors.
     # The r basically converts a normal string to a raw string to prevent the error
@@ -25,7 +25,7 @@ def testDetection():
 
     # Confidence threshold means it will only show the images that YOLO is more confident than the confident threshold humber (percentage)
 
-    confidenceThreshold = 0
+    confidenceThreshold = 0.5
 
     # NMS one is for the non-max suppression so that we don't get more than one detection for one image
 
