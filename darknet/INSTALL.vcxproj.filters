@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\aliya\OneDrive\Desktop\darknet-master\CMakeFiles\a14244b60274e171443a0ec5bc330b6f\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A31F432F-0F42-32DA-B394-783A56F658B2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
